@@ -2,7 +2,7 @@ $(document).ready(function() {
 
 // Start your code from here
 
-    var food = ["burger","pizza","taco","salad","sandwich","banana","fruit"]    
+    var food = ["burger","pizza","taco","salad","sandwich","orange","fruit"]    
 
     function populateButtons(arrayToUse,classToAdd,placeHolder){
         $(placeHolder).empty();
@@ -19,7 +19,7 @@ $(document).ready(function() {
     $("#food-buttons").on("click",".food-button", function(){
         $("#foods").empty()
         var search = $(this).attr("data-type")
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + search + "&api_key=HqpbOsQIigDKEY4Tc88XlTtqVmjK5o2A";
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + search + "&api_key=HqpbOsQIigDKEY4Tc88XlTtqVmjK5o2A&limit=10";
 
         $.ajax({url:queryURL})
         .then(function(response){
@@ -27,6 +27,7 @@ $(document).ready(function() {
             var results = response.data
 
             for(var i=0; i<results.length; i++){
+
                 var foodDiv = $("<div class \"food-item\">")
                 var rating = results[i].rating;
                 var p = $("<p>").text("Rating: " + rating)
@@ -37,8 +38,8 @@ $(document).ready(function() {
                 var foodImage = $("<img>")
                 foodImage.attr("src",still)
                 foodImage.attr("data-still",still)
-                foodImage.attr("data-animate",animated)
-                foodImage.attr("data-isAnimated","false")
+                foodImage.attr("data-animated",animated)
+                foodImage.attr("data-isanimated","false")
                 foodImage.addClass("food-image")
 
                 foodDiv.append(p)
@@ -50,23 +51,15 @@ $(document).ready(function() {
         })
     })
 
-    $(".food-image").on("click",function(){
+    $("#foods").on("click", ".food-item > img",function(){
         //Registro del evento para la imagen
-        var state = $(this).getAttribute("data-isAnimated")
-        if (state == "false") {
-            $(this).attr("src", $(this).attr("data-animate"))
-            %(this).attr("data-isAnimated","true");
+        if ($(this).attr("data-isanimated") == "false") {
+            $(this).attr("src", $(this).attr("data-animated"))
+            $(this).attr("data-isanimated","true");
         } else {
             $(this).attr("src", $(this).attr("data-still"))
-            %(this).attr("data-isAnimated","false");
+            $(this).attr("data-isanimated","false");
         }
-        /*if(state == "false"){
-            $(this).attr("src",$(this).attr("data-animate"))
-            $(this).attr("data-isAnimated","true")
-        } else {
-            $(this).attr("src", $(this).attr("data-still"))
-            %(this).attr("data-isAnimated","false");
-        }*/
     })
     
     $("#add-food").on("click",function(e){
